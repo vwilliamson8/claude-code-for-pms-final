@@ -24,6 +24,12 @@ prompt library built from your own questions.
 
 ### 1.
 
+What is missing in these documents provided?
+
 ### 2.
 
+Read the research pages and customer reviews
+
 ### 3.
+
+Yes draft the questions but also give me some direction on what the defects are
