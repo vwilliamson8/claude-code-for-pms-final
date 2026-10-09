@@ -1,0 +1,65 @@
+# Quiet Responders: see it first, then decide what to change
+
+One-pager · Product, Dispatch · 9 October 2026 · For Helen Achebe · Draft
+
+## What you asked for
+Not a quiet number change, and not a setting. Something a handler like Kip would notice and a responder who's gone quiet would feel differently about, shown before anyone touches the code. This brief proposes that in stages, so each step is a decision for you and nothing changes who gets pinged until you've seen the evidence.
+
+## Problem
+Since 4.2 shipped on 12 August, missed pings went from about 2% to 21% in release week and are still 13% in the week of 31 August. Turned-down pings stayed flat. Four responders (The Undertow, Vesper, Meteor Mite, Farlight) fell from about 49 pings a week combined to 3, with no takes since late August.
+
+The code explains why they can't recover. A missed ping is recorded as a decline. A decline costs 0.12 and a take earns back 0.08, so a responder needs a 60% take rate to break even. Scores only move when someone is pinged, and nothing decays. Wen's note about this has sat unanswered since 2019. A handler never sees an offer or its outcome, so nobody notices until the silence is weeks old.
+
+Farlight (Uptown, handler Linda Pruitt) is the clearest case. Her last take was 14 Aug and she has had no pings since 28 Aug. Linda has 11 open tickets quoting ping counts that match our database exactly. Handlers like Kip describe both sides: one responder "dead quiet", another "exhausted".
+
+## Proposal: three stages, each a decision point
+**Stage 1: make it visible. No change to routing.**
+- Handler roster flags it: "Farlight: no pings in 11 days while available, last 4 missed."
+- Missed and turned-down reported separately, per responder, every week.
+- Linda's 11 tickets, and the other open ones, get a real answer.
+- What Kip notices: he sees the quiet and the overload side by side. What the responder feels: someone finally knows.
+
+**Stage 2: give handlers a hand on the live ping.** Needs a small console feed, since handlers can't see offers today.
+- A live strip shows who holds a ping, how long is left, and what happened to it.
+- The handler can nudge the responder before it expires, and offer a callout directly to a quiet responder.
+- The direct offer depends on Wen Li confirming that a handler assignment records a take. If it doesn't, it gives the responder work but not a way back in the score.
+
+**Stage 3: change the scoring. Only with your sign-off and Wen Li's input.**
+- A miss is recorded as a miss and costs less than a decline.
+- A quiet responder gets a real way back, and is told when they've gone quiet.
+- This changes ranking for everyone, so it comes last, with the size of the change set by Wen Li and checked against Stage 1 data.
+
+A clickable mock covering the handler and responder views is in `prototype.html`. It uses invented data.
+
+## Owner
+Dispatch PM owns the direction and the measures. Marcus Oyelaran's team would build it, with Wen Li as the source for the ranking logic. Sofia Marino to design the screens. These names are my proposal and nobody has agreed yet.
+
+## Scope
+Out, deliberately:
+- A straight revert of 60s to 90s. It is the likely cause of the extra misses, but it leaves the loop that stranded four people. Whether the ping wait should be a setting is a separate question for Wen Li.
+- Availability Confidence, which could penalise the same people twice.
+- Shared cover, which doesn't reach in-area, available responders.
+- Any change to the Availability Record until Supply is looped in. Starved responders may look like low-callout windows, so Supply may be booking maintenance into them. Supply contact not yet found.
+- Anything that identifies who a responder is (Security Policy 4.1).
+
+## Success measure
+- No available responder goes more than N days without a ping. N to agree with Ravi Menon.
+- Missed and turned-down reported separately, per responder, weekly, not only in the aggregate acceptance rate.
+- Open quiet-responder and vanished-ping tickets (45) answered.
+
+## Decisions for you
+1. Agree the staged direction, with Stage 1 starting now.
+2. Whether Stage 2 and 3 should be treated as Q4 commitments. The Q3 roadmap hasn't been reconciled since 30 June, so this is also a chance to settle which Q3 items are still committed.
+3. Whether you want a ping-wait revert considered in parallel, as its own decision.
+
+## Open questions
+- **Wen Li:** miss penalty size and what "way back" looks like in ranking. Are scores stored permanently or only in memory? Do overrides record a take? Travel times between neighbouring areas?
+- **Response times:** none in the database. I can't yet confirm the four are simply slower, and no responder has been heard directly.
+- **Evidence gaps:** no prior-year data, and callouts fell about 15% from 12 Aug across 14 of 15 areas, cause unknown.
+
+## Next steps
+1. You agree the direction.
+2. I ask Ravi for the per-responder split and Nadia to answer the open tickets (Stage 1).
+3. I take Stages 2 and 3 to Marcus and Wen Li to size.
+4. I talk to Linda and one quiet responder before anything is built.
+5. I find the Supply contact before touching the Availability Record.

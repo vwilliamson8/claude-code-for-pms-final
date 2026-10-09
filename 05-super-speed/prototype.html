@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Rook Dispatch — quiet responder mock (not real data)</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;background:#f2f3f5;color:#1d2330}
+header{padding:12px 20px;background:#1d2330;color:#fff;display:flex;gap:16px;align-items:center}
+header b{flex:1}button{font:inherit;cursor:pointer}
+.tab{background:none;border:1px solid #6b7488;color:#fff;padding:6px 14px;border-radius:6px}.tab.on{background:#fff;color:#1d2330}
+.note{font-size:12px;color:#556;padding:8px 20px}
+main{display:flex;gap:24px;padding:12px 20px;flex-wrap:wrap}
+.card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 3px #0002}
+#console{flex:1;min-width:420px}#phone{width:290px;border:8px solid #1d2330;border-radius:28px;min-height:480px;padding:16px;background:#fff}
+table{width:100%;border-collapse:collapse}td,th{padding:8px;text-align:left;border-bottom:1px solid #e3e5ea;font-size:14px}
+.flag{background:#fff0d6;color:#8a5200;padding:2px 8px;border-radius:10px;font-size:12px}
+.ok{color:#2a7a3b}.btn{background:#2b5fd9;color:#fff;border:0;padding:6px 12px;border-radius:6px}
+.btn.alt{background:#fff;color:#2b5fd9;border:1px solid #2b5fd9}.btn.big{width:100%;padding:12px;margin-top:8px;font-size:16px}
+.bar{height:8px;background:#e3e5ea;border-radius:4px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:#2b5fd9;width:100%}
+.strip{background:#eef3ff;border-left:4px solid #2b5fd9;padding:10px;border-radius:6px;margin-bottom:12px;font-size:14px}
+.strip.miss{background:#fff0d6;border-color:#d98a00}
+h3{margin:0 0 8px}small{color:#667}
+</style></head><body>
+<header><b>Rook Dispatch — mock</b>
+<button class="tab on" id="t1" onclick="show('h')">Handler console (Linda)</button>
+<button class="tab" id="t2" onclick="show('r')">Farlight's phone</button></header>
+<div class="note">Illustrative mock for discussion. Names and counts echo the Oct analysis; nothing here is live. Try: Send a callout → let the ping run out → watch both sides.</div>
+<main>
+<section id="console" class="card"><h3>Uptown · Linda Pruitt</h3>
+<div id="strip" class="strip">No live ping. <button class="btn" onclick="sendPing()">Send test callout</button></div>
+<table><thead><tr><th>Responder</th><th>Status</th><th>Last 14 days</th><th></th></tr></thead><tbody>
+<tr><td>Farlight</td><td id="fstat"><span class="flag">Quiet · 0 pings in 11 days</span></td><td id="fhist">4 missed, 0 taken</td>
+<td><button class="btn alt" id="offerbtn" onclick="offerDirect()">Offer directly</button></td></tr>
+<tr><td>The Gale <small>(Eastgate)</small></td><td><span class="flag">Heavy · 9 pings this week</span></td><td>7 taken, 2 missed</td><td></td></tr>
+</tbody></table>
+<p><small>Flag appears after 7 days without a ping while available. Missed pings now show as "missed", not as "no".</small></p></section>
+<section id="phone"><div id="pbody"><h3>Farlight</h3><p>Nothing waiting.</p>
+<div class="card" style="background:#fff0d6"><b>You've been quiet</b><p style="font-size:14px">A few pings slipped past before you could answer. That's on the timing, not on you. You're still in rotation, and your next callout in Uptown comes to you first.</p>
+<button class="btn big" onclick="imBack()">I'm here — put me back</button></div></div></section>
+</main>
+<script>
+let timer,left,live=false,sw=90;
+function show(w){t1.classList.toggle('on',w=='h');t2.classList.toggle('on',w=='r')}
+function ping(){strip.className='strip';strip.innerHTML='Ping live to <b>Farlight</b> · <span id="s">'+left+'</span>s left <small>(90s: she has missed recently)</small>'}
+function sendPing(){if(live)return;live=true;left=sw;ping();
+ pbody.innerHTML='<h3>Callout: structural-entry</h3><p>Uptown, 12 min away</p><div class="bar"><i id="b"></i></div><small id="pt">'+left+'s left</small><button class="btn big" onclick="take()">Take it</button><button class="btn big alt" onclick="down()">Turn down</button>';
+ timer=setInterval(()=>{left--;s.textContent=left;pt.textContent=left+'s left';b.style.width=left/sw*100+'%';if(left<=0){clearInterval(timer);miss()}},100)}
+function take(){clearInterval(timer);live=false;strip.className='strip';strip.innerHTML='<span class="ok"><b>Taken</b></span> by Farlight. Score up.';pbody.innerHTML='<h3>Taken</h3><p class="ok">You\'re on it. Nice to have you back.</p>';fhist.textContent='4 missed, 1 taken';fstat.innerHTML='<span class="ok">Active</span>'}
+function down(){clearInterval(timer);live=false;strip.innerHTML='Turned down by Farlight. Moving to next.';pbody.innerHTML='<h3>Turned down</h3><p>No problem.</p>'}
+function miss(){live=false;strip.className='strip miss';strip.innerHTML='<b>Missed</b> by Farlight. Small score cost (not a turn-down). Moved to next responder. <button class="btn alt" onclick="offerDirect()">Offer to Farlight again</button>';pbody.innerHTML='<h3>That one moved on</h3><p>No penalty beyond a small one. Still in rotation.</p>'}
+function offerDirect(){if(live)return;strip.className='strip';strip.innerHTML='Handler offered directly to Farlight. <button class="btn" onclick="sendPing()">Send</button>'}
+function imBack(){pbody.innerHTML='<h3>You\'re back in</h3><p>Your next Uptown callout comes to you first.</p>';fstat.innerHTML='<span class="ok">Priority restart</span>';}
+</script></body></html>
