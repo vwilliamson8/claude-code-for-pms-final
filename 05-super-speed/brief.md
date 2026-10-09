@@ -10,19 +10,20 @@ Since 4.2 shipped on 12 August, missed pings went from about 2% to 21% in releas
 
 The code explains why they can't recover. A missed ping is recorded as a decline. A decline costs 0.12 and a take earns back 0.08, so a responder needs a 60% take rate to break even. Scores only move when someone is pinged, and nothing decays. Wen's note about this has sat unanswered since 2019. A handler never sees an offer or its outcome, so nobody notices until the silence is weeks old.
 
-Farlight (Uptown, handler Linda Pruitt) is the clearest case. Her last take was 14 Aug and she has had no pings since 28 Aug. Linda has 11 open tickets quoting ping counts that match our database exactly. Handlers like Kip describe both sides: one responder "dead quiet", another "exhausted".
+Farlight (Uptown, handler Linda Pruitt) is the clearest case. Her last take was 14 Aug and she has had no pings since 28 Aug (nine days to the end of the data on 6 Sep). Before 12 Aug she was pinged on all 59 Uptown callouts and took 55. Since 12 Aug only 6 of 31 Uptown callouts reached her, and she took 2. The other 25 went to responders in Kingsbridge, Mill District and Foundry Row, and Farlight is the only responder based in Uptown. Of her last 4 pings, 3 were missed, and two of those were out-of-area callouts. All 7 misses since 12 Aug fall between 09:45 and 19:51, so there is no overnight pattern. Linda has 11 open tickets quoting ping counts that match our database exactly. Handlers like Kip describe both sides: one responder "dead quiet", another "exhausted".
 
 ## Proposal: three stages, each a decision point
 **Stage 1: make it visible. No change to routing.**
-- Handler roster flags it: "Farlight: no pings in 11 days while available, last 4 missed."
+- Handler roster flags it: "Farlight: no pings in 9 days while available, 3 of last 4 pings missed." Opening the row shows every ping since 12 Aug, and which Uptown callouts went elsewhere.
 - Missed and turned-down reported separately, per responder, every week.
 - Linda's 11 tickets, and the other open ones, get a real answer.
 - What Kip notices: he sees the quiet and the overload side by side. What the responder feels: someone finally knows.
 
 **Stage 2: give handlers a hand on the live ping.** Needs a small console feed, since handlers can't see offers today.
 - A live strip shows who holds a ping, how long is left, and what happened to it.
-- The handler can nudge the responder before it expires, and offer a callout directly to a quiet responder.
-- The direct offer depends on Wen Li confirming that a handler assignment records a take. If it doesn't, it gives the responder work but not a way back in the score.
+- The handler can nudge the responder before it expires.
+- On an open callout that routing sent out of area, or where the ping to a quiet responder expired, the handler can offer it to the quiet in-area responder instead. The action sits on a real open callout, never on its own.
+- The offer depends on Wen Li confirming that a handler assignment records a take. If it doesn't, it gives the responder work but not a way back in the score.
 
 **Stage 3: change the scoring. Only with your sign-off and Wen Li's input.**
 - A miss is recorded as a miss and costs less than a decline.

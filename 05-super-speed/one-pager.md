@@ -17,7 +17,7 @@
 
 **Farlight**, a responder in Uptown, and **Linda Pruitt**, the handler who works with her.
 
-Farlight's last taken ping was 14 Aug, and she has had no pings at all since 28 Aug. She is available and in her area. Linda has filed 11 tickets quoting ping counts that match our database exactly. All 11 are still open, and Linda hasn't been interviewed yet.
+Farlight's last taken ping was 14 Aug, and she has had no pings at all since 28 Aug. She is available and is the only responder based in Uptown. Before 12 Aug she was pinged on all 59 Uptown callouts and took 55. Since then only 6 of 31 reached her, and the other 25 went to responders in other areas. Linda has filed 11 tickets quoting ping counts that match our database exactly. All 11 are still open, and Linda hasn't been interviewed yet.
 
 Three other responders (Undertow, Vesper, Meteor Mite) are in the same position, so this isn't only about Farlight.
 
@@ -29,7 +29,7 @@ Three other responders (Undertow, Vesper, Meteor Mite) are in the same position,
 
 **Linda**
 - *Today:* she finds out from the silence. She can't see a ping, who holds it, or why it moved on.
-- *After:* her roster says "Farlight: no pings in 11 days while available, last 4 missed." A live strip shows who holds a ping, how long is left, and what happened to it. While a ping is live, Linda can nudge Farlight before it expires. If Farlight is quiet, Linda can offer a callout to her directly.
+- *After:* her roster says "Farlight: no pings in 9 days while available, 3 of last 4 pings missed." A live strip shows who holds a ping, how long is left, and what happened to it. While a ping is live, Linda can nudge Farlight before it expires. If an Uptown callout has been routed out of area, or Farlight's ping has expired, Linda can offer that open callout to Farlight instead.
 
 ## 3. What it deliberately doesn't do
 

@@ -1,50 +1,385 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>Rook Dispatch — quiet responder mock (not real data)</title>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rook Dispatch: quiet responders mock (invented data, not live)</title>
 <style>
-*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;background:#f2f3f5;color:#1d2330}
-header{padding:12px 20px;background:#1d2330;color:#fff;display:flex;gap:16px;align-items:center}
-header b{flex:1}button{font:inherit;cursor:pointer}
-.tab{background:none;border:1px solid #6b7488;color:#fff;padding:6px 14px;border-radius:6px}.tab.on{background:#fff;color:#1d2330}
-.note{font-size:12px;color:#556;padding:8px 20px}
-main{display:flex;gap:24px;padding:12px 20px;flex-wrap:wrap}
-.card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 3px #0002}
-#console{flex:1;min-width:420px}#phone{width:290px;border:8px solid #1d2330;border-radius:28px;min-height:480px;padding:16px;background:#fff}
-table{width:100%;border-collapse:collapse}td,th{padding:8px;text-align:left;border-bottom:1px solid #e3e5ea;font-size:14px}
-.flag{background:#fff0d6;color:#8a5200;padding:2px 8px;border-radius:10px;font-size:12px}
-.ok{color:#2a7a3b}.btn{background:#2b5fd9;color:#fff;border:0;padding:6px 12px;border-radius:6px}
-.btn.alt{background:#fff;color:#2b5fd9;border:1px solid #2b5fd9}.btn.big{width:100%;padding:12px;margin-top:8px;font-size:16px}
-.bar{height:8px;background:#e3e5ea;border-radius:4px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:#2b5fd9;width:100%}
-.strip{background:#eef3ff;border-left:4px solid #2b5fd9;padding:10px;border-radius:6px;margin-bottom:12px;font-size:14px}
-.strip.miss{background:#fff0d6;border-color:#d98a00}
-h3{margin:0 0 8px}small{color:#667}
+:root{--bg:#0b1220;--card:#14213a;--card2:#1b2b4b;--text:#e8edf7;--muted:#93a1bd;--line:#2a3c61;
+ --accent:#4c8dff;--ok:#2fbf71;--warn:#f5a524;--bad:#ef5d5d;--map:#0f1c33;--water:#1d3b66;--street:#2a3c61;--ink:#fff}
+body.light{--bg:#eef1f6;--card:#fff;--card2:#f3f5fa;--text:#1d2330;--muted:#5d6980;--line:#d6dbe6;
+ --accent:#2b5fd9;--ok:#1f9a57;--warn:#d98a00;--bad:#d64545;--map:#e7edf7;--water:#bcd3ee;--street:#ccd5e4;--ink:#fff}
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:var(--bg);color:var(--text);font-size:14px}
+button{font:inherit;cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
+header{padding:12px 20px;background:linear-gradient(90deg,#0a1a3a,#17356b);color:#fff;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header b{flex:1;min-width:220px;font-size:15px;letter-spacing:.02em}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 12px;border-radius:999px}
+.seg button.on{background:#fff;color:#0a1a3a;font-weight:bold}
+.theme{background:none;border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 10px;border-radius:999px}
+.banner{background:#3a2f0b;border-bottom:1px solid #6b5518;color:#f5d98a;padding:8px 20px;font-size:12px}
+body.light .banner{background:#fff7e0;border-color:#ecd9a0;color:#6b5200}
+.sim{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 20px;background:var(--card2);border-bottom:1px solid var(--line);font-size:12px}
+.sim .lbl{color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-size:11px}
+.hint{padding:12px 20px;font-size:13px;color:var(--text)}
+.hint b{color:var(--accent)}
+main{display:flex;gap:24px;padding:4px 20px 28px;flex-wrap:wrap;align-items:flex-start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+#console{flex:1;min-width:460px}
+.col{width:330px}
+#phone{border:8px solid #05080f;border-radius:30px;min-height:560px;background:var(--card);overflow:hidden;box-shadow:0 8px 24px #0006}
+.cap{font-size:12px;color:var(--muted);margin:8px 4px 0}
+h3{margin:0 0 4px;font-size:17px}
+h4{margin:18px 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+small,.muted{color:var(--muted);font-size:12px}
+.btn{background:var(--accent);color:#fff;border:0;padding:8px 14px;border-radius:8px;font-weight:bold}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.alt{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.grey{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.big{width:100%;padding:13px;margin-top:8px;font-size:16px}
+.who{display:flex;gap:6px;margin-bottom:12px}
+.who button{background:var(--card2);border:1px solid var(--line);color:var(--text);padding:6px 14px;border-radius:999px}
+.who button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:bold}
+.chip.warn{background:rgba(245,165,36,.18);color:var(--warn)}
+.chip.bad{background:rgba(239,93,93,.18);color:var(--bad)}
+.chip.ok{background:rgba(47,191,113,.18);color:var(--ok)}
+.chip.mute{background:rgba(147,161,189,.18);color:var(--muted)}
+.resp{display:flex;gap:12px;align-items:center;background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px}
+.resp.warn{border-left-color:var(--warn)}.resp.bad{border-left-color:var(--bad)}.resp.ok{border-left-color:var(--ok)}
+.resp.click{cursor:pointer}.resp.click:hover{border-color:var(--accent)}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;background:#56627d;flex:none}
+.av.warn{background:var(--warn)}.av.bad{background:var(--bad)}.av.ok{background:var(--ok)}
+.rbody{flex:1;min-width:0}
+.rname{font-weight:bold;font-size:15px;margin-bottom:4px}
+.stats{display:flex;gap:12px;text-align:center}
+.stats div{min-width:44px}
+.stats b{display:block;font-size:20px}
+.stats small{font-size:11px}
+.n-ok{color:var(--ok)}.n-mute{color:var(--muted)}.n-warn{color:var(--warn)}
+.inc{background:var(--card2);border:1px solid var(--accent);border-radius:14px;padding:14px;margin:0 0 14px}
+.inc.miss{border-color:var(--warn)}.inc.done{border-color:var(--ok)}.inc.idle{border-color:var(--line);color:var(--muted)}
+.inc .top{display:flex;gap:14px;align-items:center}
+.ring{width:64px;height:64px;flex:none}
+.rtrack{fill:none;stroke:var(--line);stroke-width:5}
+.rfill{fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round}
+.rtxt{fill:var(--text);font-size:17px;font-weight:bold;text-anchor:middle}
+.inc .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:11px;border:1px dashed var(--muted);color:var(--muted);padding:2px 7px;border-radius:5px}
+.cmp{margin-top:12px;font-size:12px}
+.cmp .line{display:flex;align-items:center;gap:8px;margin:5px 0}
+.cmp .lab{width:150px;color:var(--muted)}
+.cmp .trk{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.cmp .trk i{display:block;height:100%;border-radius:5px}
+.tl{list-style:none;margin:6px 0 0;padding:0}
+.tl li{padding:3px 0;font-size:13px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px}
+.dot.taken{background:var(--ok)}.dot.missed{background:var(--warn)}.dot.turned{background:#7d869a}
+.detail{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;margin:-2px 0 10px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:8px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-size:12px;color:var(--muted);font-weight:normal}
+.ok{color:var(--ok)}
+.stage-tag{font-size:11px;background:var(--accent);color:#fff;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle;text-transform:none;letter-spacing:0}
+/* phone */
+.ptop{background:linear-gradient(90deg,#0a1a3a,#17356b);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.ptop .av{width:34px;height:34px;font-size:14px}
+.ptop b{flex:1}
+.pbody{padding:12px 14px 16px}
+.pmap{display:block;width:100%;border-radius:12px;border:1px solid var(--line)}
+.pin{cursor:pointer}
+.pulse{animation:pulse 1.4s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin:6px 0}
+.pcard{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}
+.pcard p{margin:6px 0}
+.pcard.warn{border-color:var(--warn);background:rgba(245,165,36,.12)}
+.pcard.okc{border-color:var(--ok);background:rgba(47,191,113,.12)}
+.pcard.live{border-color:var(--accent)}
+.bar{display:block;height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--accent)}
+.nudge{background:rgba(76,141,255,.16);border-left:4px solid var(--accent);padding:8px 10px;border-radius:6px;margin:8px 0;font-size:13px}
+.recent{margin-top:10px;font-size:13px}
+.recent div{padding:5px 0;border-bottom:1px solid var(--line)}
 </style></head><body>
-<header><b>Rook Dispatch — mock</b>
-<button class="tab on" id="t1" onclick="show('h')">Handler console (Linda)</button>
-<button class="tab" id="t2" onclick="show('r')">Farlight's phone</button></header>
-<div class="note">Illustrative mock for discussion. Names and counts echo the Oct analysis; nothing here is live. Try: Send a callout → let the ping run out → watch both sides.</div>
+
+<header>
+  <b>Rook Dispatch &middot; quiet responders mock</b>
+  <div class="seg" id="stages" role="group" aria-label="Which version to show"></div>
+  <button class="theme" onclick="toggleTheme()" id="themebtn">Light mode</button>
+</header>
+<div class="banner">Farlight's ping history, the weekly report and the Eastgate counts are real, from rook-database (29 Jun to 6 Sep; "now" in this mock is 6 Sep). The callout simulation, travel times, map positions and all screen designs are invented. Nothing is live and no scoring is modelled. No responder has been heard directly yet.</div>
+
+<div class="sim">
+  <span class="lbl">Mock controls, not part of the product</span>
+  <button class="btn" id="send1" onclick="sendCallout('Farlight')">Callout: ranks Farlight first</button>
+  <button class="btn" id="send2" onclick="sendCallout('Sgt. Falkirk')">Callout: routed to someone else</button>
+  <button class="btn grey" id="skip" onclick="skipToExpiry()">Skip to expiry</button>
+  <button class="btn grey" onclick="resetAll()">Reset</button>
+  <small>Ping wait is 60s (4.2); here it runs 4x faster.</small>
+</div>
+
+<div class="hint" id="hint"></div>
+
 <main>
-<section id="console" class="card"><h3>Uptown · Linda Pruitt</h3>
-<div id="strip" class="strip">No live ping. <button class="btn" onclick="sendPing()">Send test callout</button></div>
-<table><thead><tr><th>Responder</th><th>Status</th><th>Last 14 days</th><th></th></tr></thead><tbody>
-<tr><td>Farlight</td><td id="fstat"><span class="flag">Quiet · 0 pings in 11 days</span></td><td id="fhist">4 missed, 0 taken</td>
-<td><button class="btn alt" id="offerbtn" onclick="offerDirect()">Offer directly</button></td></tr>
-<tr><td>The Gale <small>(Eastgate)</small></td><td><span class="flag">Heavy · 9 pings this week</span></td><td>7 taken, 2 missed</td><td></td></tr>
-</tbody></table>
-<p><small>Flag appears after 7 days without a ping while available. Missed pings now show as "missed", not as "no".</small></p></section>
-<section id="phone"><div id="pbody"><h3>Farlight</h3><p>Nothing waiting.</p>
-<div class="card" style="background:#fff0d6"><b>You've been quiet</b><p style="font-size:14px">A few pings slipped past before you could answer. That's on the timing, not on you. You're still in rotation, and your next callout in Uptown comes to you first.</p>
-<button class="btn big" onclick="imBack()">I'm here — put me back</button></div></div></section>
+  <section id="console" class="card"></section>
+  <section class="col">
+    <div id="phone"></div>
+    <div class="cap" id="phonecap"></div>
+  </section>
 </main>
+
 <script>
-let timer,left,live=false,sw=90;
-function show(w){t1.classList.toggle('on',w=='h');t2.classList.toggle('on',w=='r')}
-function ping(){strip.className='strip';strip.innerHTML='Ping live to <b>Farlight</b> · <span id="s">'+left+'</span>s left <small>(90s: she has missed recently)</small>'}
-function sendPing(){if(live)return;live=true;left=sw;ping();
- pbody.innerHTML='<h3>Callout: structural-entry</h3><p>Uptown, 12 min away</p><div class="bar"><i id="b"></i></div><small id="pt">'+left+'s left</small><button class="btn big" onclick="take()">Take it</button><button class="btn big alt" onclick="down()">Turn down</button>';
- timer=setInterval(()=>{left--;s.textContent=left;pt.textContent=left+'s left';b.style.width=left/sw*100+'%';if(left<=0){clearInterval(timer);miss()}},100)}
-function take(){clearInterval(timer);live=false;strip.className='strip';strip.innerHTML='<span class="ok"><b>Taken</b></span> by Farlight. Score up.';pbody.innerHTML='<h3>Taken</h3><p class="ok">You\'re on it. Nice to have you back.</p>';fhist.textContent='4 missed, 1 taken';fstat.innerHTML='<span class="ok">Active</span>'}
-function down(){clearInterval(timer);live=false;strip.innerHTML='Turned down by Farlight. Moving to next.';pbody.innerHTML='<h3>Turned down</h3><p>No problem.</p>'}
-function miss(){live=false;strip.className='strip miss';strip.innerHTML='<b>Missed</b> by Farlight. Small score cost (not a turn-down). Moved to next responder. <button class="btn alt" onclick="offerDirect()">Offer to Farlight again</button>';pbody.innerHTML='<h3>That one moved on</h3><p>No penalty beyond a small one. Still in rotation.</p>'}
-function offerDirect(){if(live)return;strip.className='strip';strip.innerHTML='Handler offered directly to Farlight. <button class="btn" onclick="sendPing()">Send</button>'}
-function imBack(){pbody.innerHTML='<h3>You\'re back in</h3><p>Your next Uptown callout comes to you first.</p>';fstat.innerHTML='<span class="ok">Priority restart</span>';}
+const WAIT=60, TICK=250, RING=163.4;
+const OPEN=[170,80], HOME=[105,125];
+const NEWPOS=[[85,100],[190,130],[60,60],[150,150]];
+/* Real Farlight pings since 12 Aug (rook-database, to 6 Sep). Map positions are invented; out-of-area pings sit on the right edge. */
+const HIST0=[
+ {d:'12 Aug',t:'16:36',o:'taken',a:'Uptown',pos:[60,150]},
+ {d:'12 Aug',t:'19:51',o:'missed',a:'Mill District',pos:[242,60]},
+ {d:'12 Aug',t:'20:02',o:'turned',a:'Kingsbridge',pos:[242,110]},
+ {d:'13 Aug',t:'09:45',o:'missed',a:'Uptown',pos:[205,60]},
+ {d:'13 Aug',t:'14:51',o:'missed',a:'Kingsbridge',pos:[242,140]},
+ {d:'14 Aug',t:'16:32',o:'missed',a:'Uptown',pos:[100,60]},
+ {d:'14 Aug',t:'21:22',o:'taken',a:'Uptown',pos:[200,150]},
+ {d:'19 Aug',t:'13:28',o:'missed',a:'Uptown',pos:[145,100]},
+ {d:'22 Aug',t:'11:13',o:'turned',a:'Uptown',pos:[75,95]},
+ {d:'23 Aug',t:'13:51',o:'missed',a:'Mill District',pos:[242,85]},
+ {d:'28 Aug',t:'19:28',o:'missed',a:'Mill District',pos:[242,165]}];
+function recent(){const l=S.hist.slice(-4);return {n:l.length,m:l.filter(x=>x.o==='missed').length}}
+function isQuiet(){return S.days>=7&&S.hist[S.hist.length-1].o!=='taken'}
+function when(x){return x.d+', '+x.t}
+function nowT(){const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')}
+const STAGES=[['0','Today (4.2)'],['1','Stage 1: see it'],['2','Stage 2: act on an open callout'],['3','Stage 3: change the scoring']];
+const HINTS={
+ 0:'<b>Today.</b> Press either callout button, then <b>Skip to expiry</b>. Look for anything in Linda\'s console or on the phone. There is nothing to see.',
+ 1:'<b>Stage 1.</b> Click the <b>Farlight</b> row for its ping history. Switch to <b>Kip · Eastgate</b> to see quiet and overloaded side by side. On the phone, tap a pin on the map. Routing is unchanged.',
+ 2:'<b>Stage 2.</b> Press <b>Callout: routed to someone else</b>. Farlight is the only Uptown responder, yet 25 of 31 Uptown callouts since 12 Aug never reached Farlight. Click <b>Offer to Farlight instead</b>, then tap the green <b>ON THE WAY TO SAVE THE DAY</b> button on the phone. Or send <b>Farlight first</b> and use <b>Nudge</b>.',
+ 3:'<b>Stage 3.</b> Let a ping to Farlight expire and compare the wording of the miss. On the phone, tap <b>I\'m here and ready</b>. Scoring numbers are not modelled; Wen Li sets them.'
+};
+let S,timer;
+function fresh(){return {stage:2,who:'linda',ping:null,last:null,nudged:false,pending:false,open:false,sel:null,
+  days:9,here:false,hist:HIST0.map(h=>({...h,pos:h.pos.slice()}))}}
+S=fresh();
+const $=id=>document.getElementById(id);
+function counts(){const c={taken:0,turned:0,missed:0};S.hist.forEach(h=>c[h.o]++);return c}
+
+/* ---------- ping simulation ---------- */
+function sendCallout(holder){
+  if(S.ping)return;
+  S.who='linda';S.pending=false;S.sel=null;
+  startPing('callout',holder);
+}
+function startPing(kind,holder){
+  S.ping={kind,holder,left:WAIT};S.last=null;S.nudged=false;S.pending=false;
+  clearInterval(timer);timer=setInterval(tick,TICK);
+  render();
+}
+function tick(){
+  if(!S.ping)return;
+  S.ping.left--;
+  if(S.ping.left<=0){end(S.ping.holder==='Farlight'?'missed':'elsewhere');return}
+  paintTimer();
+}
+function paintTimer(){
+  const p=S.ping;if(!p)return;
+  const pct=p.left/WAIT;
+  ['hl','pl'].forEach(id=>{if($(id))$(id).textContent=p.left});
+  if($('hr'))$('hr').setAttribute('stroke-dashoffset',(RING*(1-pct)).toFixed(1));
+  if($('pb'))$('pb').style.width=(pct*100)+'%';
+}
+function skipToExpiry(){if(S.ping){S.ping.left=1;tick()}}
+function end(o){
+  clearInterval(timer);
+  const kind=S.ping?S.ping.kind:'callout',holder=S.ping?S.ping.holder:'Farlight';
+  S.ping=null;S.last={o,kind,holder};S.nudged=false;S.pending=false;
+  if(o!=='elsewhere'){
+    S.hist.push({d:'Just now',t:nowT(),o,a:'Uptown',pos:NEWPOS[S.hist.length%NEWPOS.length]});
+    S.days=0;
+    if(o==='taken')S.here=true;
+  }
+  render();
+}
+function take(){end('taken')}
+function down(){end('turned')}
+function nudge(){if(S.ping&&!S.nudged){S.nudged=true;render()}}
+function offerAsk(){S.pending=true;render()}
+function offerCancel(){S.pending=false;render()}
+function offerSend(){clearInterval(timer);S.ping=null;startPing('direct','Farlight')}
+function imHere(){S.here=true;render()}
+function toggleOpen(){S.open=!S.open;render()}
+function selPin(i){S.sel=(S.sel===i?null:i);renderPhone()}
+function setStage(n){S.stage=+n;render()}
+function setWho(w){S.who=w;render()}
+function resetAll(){clearInterval(timer);const st=S.stage;S=fresh();S.stage=st;render()}
+function toggleTheme(){document.body.classList.toggle('light');$('themebtn').textContent=document.body.classList.contains('light')?'Dark mode':'Light mode';render()}
+
+/* ---------- handler console ---------- */
+function farlightChip(){
+  const r=recent(),l=S.hist[S.hist.length-1];
+  if(isQuiet())return {cls:'warn',html:`<span class="chip warn">Quiet &middot; no pings in ${S.days} days while available &middot; ${r.m} of last ${r.n} pings missed</span>`};
+  if(l.o==='missed')return {cls:'warn',html:`<span class="chip warn">Last ping missed &middot; ${r.m} of last ${r.n} missed</span>`};
+  if(l.o==='turned')return {cls:'',html:`<span class="chip mute">Last ping turned down</span>`};
+  return {cls:'ok',html:`<span class="chip ok">Active &middot; last ping taken</span>`};
+}
+function statsHTML(t,u,m){
+  return `<div class="stats"><div><b class="n-ok">${t}</b><small>taken</small></div><div><b class="n-mute">${u}</b><small>turned down</small></div><div><b class="n-warn">${m}</b><small>missed</small></div></div>`;
+}
+function respRow(o){
+  return `<div class="resp ${o.cls||''} ${o.click?'click':''}" ${o.click?'onclick="toggleOpen()" title="Click for ping history"':''}>
+    <div class="av ${o.cls||''}">${o.name[0]}</div>
+    <div class="rbody"><div class="rname">${o.name} <small>${o.area}</small></div><div>${o.chip}${o.extra||''}</div></div>
+    ${o.stats||''}</div>`;
+}
+function ringHTML(p){
+  return `<svg class="ring" viewBox="0 0 60 60"><circle class="rtrack" cx="30" cy="30" r="26"/>
+    <circle class="rfill" id="hr" cx="30" cy="30" r="26" stroke-dasharray="${RING}" stroke-dashoffset="${(RING*(1-p.left/WAIT)).toFixed(1)}" transform="rotate(-90 30 30)"/>
+    <text class="rtxt" x="30" y="36" id="hl">${p.left}</text></svg>`;
+}
+function cmpHTML(){
+  return `<div class="cmp"><div class="line"><span class="lab"><b>Farlight</b> &middot; Uptown, available</span><span class="trk"><i style="width:60%;background:var(--ok)"></i></span><span>12 min</span></div>
+    <div class="line"><span class="lab">Sgt. Falkirk &middot; Kingsbridge</span><span class="trk"><i style="width:100%;background:var(--warn)"></i></span><span>~20 min</span></div>
+    <small>Travel times invented. Travel times between areas are an open question for Wen Li.</small></div>`;
+}
+function offerTag(){return `<span class="tag">Open for Wen Li: does a handler assignment record a take? Can a live ping be withdrawn?</span>`;}
+function incidentHTML(){
+  if(S.stage<2)return '';
+  const p=S.ping,l=S.last;
+  if(S.pending){
+    return `<div class="inc" role="status"><b>Offer this callout to Farlight instead?</b><br><small>structural-entry &middot; Uptown &middot; 12 min away${p?' &middot; the ping to '+p.holder+' would be withdrawn':''}</small>
+      <div class="row"><button class="btn ok" onclick="offerSend()">Send offer</button><button class="btn grey" onclick="offerCancel()">Cancel</button>${offerTag()}</div></div>`;
+  }
+  if(p&&p.holder==='Farlight'){
+    return `<div class="inc" role="status"><div class="top">${ringHTML(p)}<div><b>${p.kind==='direct'?'Direct offer':'Live ping'} &middot; Farlight</b><br><small>structural-entry &middot; Uptown &middot; 12 min away</small></div></div>
+      <div class="row"><button class="btn alt" onclick="nudge()" ${S.nudged?'disabled':''}>${S.nudged?'Nudged ✓':'Nudge Farlight'}</button>
+      <small>${S.nudged?'The responder\'s phone buzzed. The ping wait did not change.':'Buzzes the responder\'s phone before the ping runs out. Does not extend the wait.'}</small></div></div>`;
+  }
+  if(p){
+    return `<div class="inc" role="status"><div class="top">${ringHTML(p)}<div><b>Live ping &middot; ${p.holder}</b><br><small>structural-entry &middot; Uptown &middot; routing offered it out of area</small></div></div>
+      ${cmpHTML()}
+      <div class="row"><button class="btn ok" onclick="offerAsk()">Offer to Farlight instead</button><small>Farlight has had no pings in ${S.days} days.</small></div></div>`;
+  }
+  if(l){
+    const who=l.kind==='direct'?'Direct offer':'Ping';
+    if(l.o==='taken')return `<div class="inc done" role="status"><b>Farlight is en route</b> to the callout. <small>${who} taken.</small>${S.stage===3?' Counts toward getting back into rotation.':''}</div>`;
+    if(l.o==='turned')return `<div class="inc idle" role="status"><b>${who} turned down</b> by Farlight. Callout moved on to the next-ranked responder.</div>`;
+    if(l.o==='elsewhere')return `<div class="inc miss" role="status"><b>Taken by ${l.holder}</b>, about 20 min away. Farlight, 12 min away and available, was never asked.</div>`;
+    return `<div class="inc miss" role="status"><b>${who} missed</b> by Farlight at ${S.hist[S.hist.length-1].t}. Callout moved on to the next-ranked responder.
+      ${S.stage===3?'Recorded as a miss, which costs less than a turn-down. <span class="tag">Size to be set with Wen Li</span>':'Scored as a decline today, the same as a turn-down.'}
+      <div class="row"><button class="btn ok" onclick="offerAsk()">Offer to Farlight again</button>${offerTag()}</div></div>`;
+  }
+  return `<div class="inc idle" role="status">No open callouts in Uptown. Pings and outcomes will show here.</div>`;
+}
+function lindaRoster(){
+  const st=S.stage,c=counts();
+  if(st===0)return respRow({name:'Farlight',area:'Uptown',cls:'',chip:'<span class="chip mute">Available</span>',extra:' <small>No ping history in the console</small>'});
+  const f=farlightChip();
+  let h=respRow({name:'Farlight',area:`Uptown &middot; counts since 12 Aug &middot; ${S.open?'▾':'▸'} ping history`,cls:f.cls,chip:f.html,click:true,
+    extra:S.here&&st===3?'<br><small class="ok">Responder says they are here and ready</small>':'',stats:statsHTML(c.taken,c.turned,c.missed)});
+  if(S.open){
+    h+=`<div class="detail"><b>Why Farlight went quiet</b>
+      <p style="margin:6px 0">Before 12 Aug, Farlight was pinged first on all 59 Uptown callouts and took 55. Since 12 Aug, only 6 of 31 Uptown callouts reached Farlight. The other 25 went to responders in Kingsbridge, Mill District and Foundry Row.</p>
+      <b>Every ping since 12 Aug</b> <small>(real; 2 taken, 2 turned down, 7 missed)</small>
+      <ul class="tl">${S.hist.map(x=>`<li><span class="dot ${x.o}"></span>${when(x)}: ${x.o==='turned'?'turned down':x.o}${x.a!=='Uptown'?` <small>(${x.a} callout, out of area)</small>`:''}</li>`).join('')}
+      ${S.days>=7?`<li><span class="dot" style="background:var(--line)"></span>28 Aug to 6 Sep: no pings while available (${S.days} days)</li>`:''}</ul>
+      <p class="muted" style="margin:8px 0 0">Misses since 12 Aug fall between 09:45 and 19:51, so no overnight pattern. Response times are not in the data, so we cannot say why they were missed.</p>
+      <p class="muted" style="margin:8px 0 0">11 open tickets from Linda about this. Stage 1 gives them a real answer.</p></div>`;
+  }
+  return h;
+}
+function kipRoster(){
+  const st=S.stage;
+  if(st===0){
+    return respRow({name:'Meteor Mite',area:'Eastgate',chip:'<span class="chip mute">Available</span>'})+
+      respRow({name:'The Gale',area:'Eastgate',chip:'<span class="chip mute">Available</span>'})+
+      `<p class="muted">Both look the same. Nothing shows that one has been silent and the other has taken almost everything.</p>`;
+  }
+  return respRow({name:'Meteor Mite',area:'Eastgate &middot; week of 31 Aug',cls:'warn',chip:'<span class="chip warn">Quiet &middot; 1 ping this week, missed</span>',stats:statsHTML(0,0,1)})+
+    respRow({name:'The Gale',area:'Eastgate &middot; week of 31 Aug',cls:'bad',chip:'<span class="chip bad">Heavy &middot; 21 pings this week</span>',stats:statsHTML(16,3,2)})+
+    `<p class="muted">Both are in Eastgate, so Kip sees the quiet and the overload side by side. ${st>=2?'The open-callout actions are clickable in Linda\'s Uptown view.':''}</p>`;
+}
+function reportHTML(){
+  if(S.stage<1)return '';
+  return `<h4>Weekly report <span class="stage-tag">Stage 1</span></h4>
+    <table><thead><tr><th>Week of 24 Aug</th><th>Pings</th><th>Taken</th><th>Turned down</th><th>Missed</th></tr></thead><tbody>
+    <tr><td>All responders (the headline)</td><td>162</td><td>108</td><td>30</td><td>24</td></tr>
+    <tr><td><b>Farlight</b></td><td>1</td><td>0</td><td>0</td><td><b class="n-warn">1</b></td></tr></tbody></table>
+    <p class="muted">Real numbers. The headline acceptance rate that week was 67%, and it cannot show a responder who got one ping in seven days. Missed and turned down are reported separately, per responder.</p>`;
+}
+function renderHandler(){
+  const linda=S.who==='linda';
+  $('console').innerHTML=`<div class="who"><button class="${linda?'on':''}" onclick="setWho('linda')">Linda Pruitt &middot; Uptown</button>
+    <button class="${linda?'':'on'}" onclick="setWho('kip')">Kip &middot; Eastgate</button></div>
+    <h3>${linda?'Uptown':'Eastgate'}</h3>
+    ${S.stage===0&&linda?'<div class="inc idle">Handlers cannot see offers or their outcomes today. A ping that goes unanswered, or a callout routed away from an available responder, leaves no trace in the console.</div>':(linda?incidentHTML():'')}
+    <h4 style="margin-top:6px">Roster</h4>
+    ${linda?lindaRoster():kipRoster()}
+    ${linda?reportHTML():''}`;
+}
+
+/* ---------- responder phone ---------- */
+function pinColor(o){return o==='taken'?'var(--ok)':o==='missed'?'var(--warn)':'#7d869a'}
+function mapHTML(){
+  const p=S.ping,open=p||(S.last&&S.last.o==='elsewhere'?null:null);
+  let pins=S.hist.map((h,i)=>`<g class="pin" onclick="selPin(${i})"><circle cx="${h.pos[0]}" cy="${h.pos[1]}" r="${S.sel===i?10:7}" fill="${pinColor(h.o)}" stroke="#fff" stroke-width="${S.sel===i?3:1.5}"/></g>`).join('');
+  let openPin='';
+  if(p){
+    const mine=p.holder==='Farlight';
+    openPin=`<line x1="${HOME[0]}" y1="${HOME[1]}" x2="${OPEN[0]}" y2="${OPEN[1]}" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 4"/>
+      <circle class="pulse" cx="${OPEN[0]}" cy="${OPEN[1]}" r="8" fill="${mine?'var(--accent)':'#7d869a'}"/>
+      <circle cx="${OPEN[0]}" cy="${OPEN[1]}" r="8" fill="${mine?'var(--accent)':'#7d869a'}" stroke="#fff" stroke-width="2"/>
+      <text x="${OPEN[0]}" y="${OPEN[1]-14}" text-anchor="middle" font-size="10" fill="var(--text)">${mine?'Open call':'Open, not yours'}</text>`;
+  }
+  return `<svg class="pmap" viewBox="0 0 260 200" role="img" aria-label="Schematic map of Uptown with your past calls">
+    <rect width="260" height="200" fill="var(--map)"/>
+    <path d="M0 175 C60 150 90 190 150 170 S230 150 260 165 L260 200 L0 200Z" fill="var(--water)"/>
+    <g stroke="var(--street)" stroke-width="3" fill="none"><path d="M0 40H260M0 95H260M0 140H260M45 0V200M115 0V200M185 0V200"/><path d="M0 20L260 120" stroke-width="2"/></g>
+    <text x="10" y="14" font-size="10" fill="var(--muted)" letter-spacing="1">UPTOWN (schematic)</text>
+    ${openPin}${pins}
+    <g><circle cx="${HOME[0]}" cy="${HOME[1]}" r="9" fill="#fff" stroke="var(--accent)" stroke-width="3"/><text x="${HOME[0]}" y="${HOME[1]+22}" text-anchor="middle" font-size="10" fill="var(--text)">You</text></g>
+  </svg>
+  <div class="legend"><span><span class="dot taken"></span>Taken</span><span><span class="dot missed"></span>Missed</span><span><span class="dot turned"></span>Turned down</span><span><span class="dot" style="background:var(--accent)"></span>Open call</span><span>Right edge: callouts outside Uptown</span></div>`;
+}
+function renderPhone(){
+  const st=S.stage,p=S.ping,mine=p&&p.holder==='Farlight';
+  let h=`<div class="ptop"><div class="av">F</div><b>Farlight</b><span class="chip ${isQuiet()?'warn':'ok'}">Available</span></div><div class="pbody">`;
+  if(st>=1)h+=mapHTML();
+  if(st>=1&&S.sel!==null){
+    const x=S.hist[S.sel];
+    h+=`<div class="pcard"><b>${when(x)}</b> &middot; ${x.o==='turned'?'turned down':x.o}</div>`;
+  }
+  if(mine){
+    h+=`<div class="pcard live"><small>${p.kind==='direct'?'Linda offered you this callout':'New callout'}</small><br><b style="font-size:16px">structural-entry</b><br>Uptown &middot; 12 min away
+      <span class="bar"><i id="pb" style="width:${p.left/WAIT*100}%"></i></span><small><span id="pl">${p.left}</span>s left</small></div>
+      ${S.nudged&&st>=2?'<div class="nudge">Linda is waiting on this one.</div>':''}
+      <button class="btn ok big" onclick="take()">ON THE WAY TO SAVE THE DAY</button><button class="btn grey big" onclick="down()">Turn down</button>`;
+  }else{
+    const l=S.last;
+    if(p&&st>=2)h+=`<div class="pcard"><b>1 open call nearby</b><p class="muted" style="margin:4px 0 0">With another responder. Not offered to you.</p></div>`;
+    else if(l&&l.o==='taken')h+=`<div class="pcard okc"><b>You're en route.</b> Go save the day.${st===3?' It counts toward getting you back into rotation.':''}</div>`;
+    else if(l&&l.o==='turned')h+=`<div class="pcard">Turned down. No problem.</div>`;
+    else if(l&&l.o==='missed')h+=st===3?`<div class="pcard warn"><b>That one moved on</b><p>It expired before you answered. It is recorded as a miss, not a turn-down.</p></div>`:`<div class="pcard">Nothing waiting.</div>`;
+    else h+=`<div class="pcard">Nothing waiting.</div>`;
+    const quiet=st===3&&isQuiet()&&!S.here;
+    if(quiet)h+=`<div class="pcard warn"><b>You've gone quiet</b><p>You haven't had a callout in ${S.days} days, and ${recent().m} of your last ${recent().n} pings moved on before you answered. We don't know why yet.</p><p>If you're available and ready, tell us.</p><button class="btn big" onclick="imHere()">I'm here and ready</button></div>`;
+    else if(st===3&&S.here&&S.days>=7)h+=`<div class="pcard okc"><b>Thanks, noted</b><p>Linda can see you're here and ready.</p></div>`;
+  }
+  if(st>=1){
+    h+=`<h4 style="margin:14px 0 4px">Your recent calls</h4><div class="recent">${S.hist.slice(-4).reverse().map(x=>`<div><span class="dot ${x.o}"></span>${when(x)} &middot; ${x.o==='turned'?'turned down':x.o}</div>`).join('')}</div>`;
+  }
+  h+='</div>';
+  $('phone').innerHTML=h;
+  $('phonecap').textContent=st===0?'What the responder sees today: the callout simply disappears.':
+    st===1?'Proposed: a map of your past calls, so the responder can see their own history.':
+    st===2?'Adds open calls on the map, nudges from the handler, and handler-offered callouts that say so. Design question: should responders see open calls they were not offered?':
+    'Responder is told when they have gone quiet, and a miss is labelled as a miss.';
+}
+
+function render(){
+  $('stages').innerHTML=STAGES.map(([n,t])=>`<button class="${S.stage==n?'on':''}" onclick="setStage(${n})">${t}</button>`).join('');
+  $('hint').innerHTML=HINTS[S.stage];
+  $('send1').disabled=$('send2').disabled=!!S.ping;$('skip').disabled=!S.ping;
+  renderHandler();renderPhone();
+}
+render();
 </script></body></html>
